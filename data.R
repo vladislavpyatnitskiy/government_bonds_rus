@@ -4,11 +4,18 @@ smartlab.gov.bond <- function(x){ # Get data for Russian government bonds
   
   D <- NULL
   
-  for (n in 1:length(x)){
+  for (n in 1:length(x)){ a<- x[n]
     
-    l <- read_html(sprintf("https://smart-lab.ru/q/bonds/%s/", x[n])) %>%
+    l <- read_html(sprintf("https://smart-lab.ru/q/bonds/%s/", a)) %>%
       html_nodes("article") %>% html_nodes("div") %>% html_nodes("div") %>%
       html_text()
+    
+    message(
+      sprintf(
+        "%s is downloaded (%s / %s)", 
+        a, which(x == a), length(x)
+      )
+    ) # Download message
     
     l <- gsub('["\n"]', '', gsub('["\t"]', '',l)) # Clean and assign data
     
@@ -24,7 +31,7 @@ smartlab.gov.bond <- function(x){ # Get data for Russian government bonds
     L <- as.data.frame(L[,-1])
     
     rownames(L) <- v # Assign row names
-    colnames(L) <- x[n]
+    colnames(L) <- a
     
     if (is.null(D)) D <- L else D <- cbind(D, L) } # Merge
   
